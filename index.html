@@ -1,0 +1,1612 @@
+<!-- Replace YOUR-DOMAIN.com before launch -->
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>How to Password Protect a USB Drive on Windows and Mac</title>
+<meta content="A complete editorial guide on how to password protect a USB drive. Compare native OS tools like BitLocker with cross-platform software methods." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
+:root {
+    --color-bg: #FAFAFA;
+    --color-hero-bg: #0F0F1A;
+    --color-card: #FFFFFF;
+    --color-border: #E5E7EB;
+    --color-body: #111827;
+    --color-muted: #6B7280;
+    --color-soft: #F6F7FB;
+
+    --gradient-a: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+    --gradient-b: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+    --gradient-c: linear-gradient(135deg, #F093FB 0%, #F5576C 100%);
+    --gradient-d: linear-gradient(135deg, #4FACFE 0%, #00F2FE 100%);
+    --spectrum: #FF6B6B, #FF8E53, #667EEA, #764BA2, #F093FB, #F5576C, #4FACFE, #00F2FE;
+
+    --font-heading: 'Manrope', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-body: 'Manrope', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+    --max-reading-width: 760px;
+    --max-wide-width: 1120px;
+    --section-padding-v: 86px;
+    --radius-card: 20px;
+    --radius-small: 8px;
+    --shadow-card: 0 18px 50px rgba(15, 15, 26, 0.08);
+    --transition-speed: 0.25s;
+}
+
+@property --gradient-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+/* Reset & Base */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: var(--font-body);
+    background:
+        radial-gradient(circle at 10% 0%, rgba(102,126,234,0.08), transparent 32rem),
+        radial-gradient(circle at 90% 18%, rgba(240,147,251,0.07), transparent 30rem),
+        var(--color-bg);
+    color: var(--color-body);
+    line-height: 1.78;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, .ui-label {
+    font-family: var(--font-heading);
+    color: var(--color-body);
+    line-height: 1.15;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+}
+a { color: #667EEA; text-decoration: none; transition: all var(--transition-speed); }
+a:hover { color: #764BA2; }
+ul, ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+li { margin-bottom: 0.5rem; }
+p { margin-bottom: 1.5rem; }
+strong { font-weight: 800; color: #111827; }
+
+.container-reading { max-width: var(--max-reading-width); margin: 0 auto; padding: 0 24px; }
+.container-wide { max-width: var(--max-wide-width); margin: 0 auto; padding: 0 24px; }
+.section-pad { padding: var(--section-padding-v) 0; }
+.bg-alt {
+    background:
+        radial-gradient(circle at 5% 20%, rgba(79,172,254,0.07), transparent 26rem),
+        radial-gradient(circle at 95% 5%, rgba(255,107,107,0.06), transparent 24rem),
+        #FFFFFF;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* Brand graphic */
+.brand-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+.security-mark {
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    display: block;
+    filter: drop-shadow(0 10px 18px rgba(102,126,234,0.24));
+}
+.site-brand {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 800;
+    color: #111827;
+    letter-spacing: -0.025em;
+    margin: 0;
+    white-space: nowrap;
+}
+
+/* Header & Nav */
+header {
+    position: sticky;
+    top: 0;
+    background: rgba(250,250,250,0.92);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(229,231,235,0.9);
+    z-index: 100;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+}
+.header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    gap: 28px;
+}
+.nav-links { display: flex; gap: 24px; align-items: center; }
+.nav-links a {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 700;
+    color: #374151;
+}
+.nav-links a:hover { color: #667EEA; }
+.nav-cta {
+    position: relative;
+    overflow: hidden;
+    color: #fff !important;
+    border: 0;
+    padding: 10px 18px;
+    border-radius: var(--radius-small);
+    background: var(--gradient-a);
+    box-shadow: 0 12px 26px rgba(255,107,107,0.28);
+}
+.nav-cta::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+    transform: translateX(-120%);
+    transition: transform .55s ease;
+}
+.nav-cta:hover::after { transform: translateX(120%); }
+.menu-toggle {
+    display: none;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    font-size: 22px;
+    cursor: pointer;
+    color: #111827;
+    width: 42px;
+    height: 42px;
+}
+
+/* Buttons */
+.btn {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    padding: 13px 24px;
+    border-radius: var(--radius-small);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    border: 1.5px solid #667EEA;
+    background:
+        linear-gradient(90deg, rgba(102,126,234,0.14), rgba(118,75,162,0.14)) left / 0 100% no-repeat,
+        transparent;
+    color: #667EEA;
+    transition: background-size .45s ease, color .25s ease, transform .25s ease, border-color .25s ease;
+}
+.btn:hover {
+    background-size: 100% 100%;
+    color: #764BA2;
+    transform: translateY(-2px);
+}
+.btn-solid {
+    border: 0;
+    color: #fff;
+    background:
+        linear-gradient(90deg, rgba(255,255,255,0.22), rgba(255,255,255,0.02)) left / 0 100% no-repeat,
+        var(--gradient-a);
+    box-shadow: 0 16px 32px rgba(255,107,107,0.28);
+}
+.btn-solid:hover {
+    background-size: 100% 100%;
+    color: #fff;
+}
+
+/* Animated gradient border system */
+.animated-card {
+    position: relative;
+    z-index: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-card);
+    box-shadow: var(--shadow-card);
+}
+.animated-card::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0;
+    background: conic-gradient(from var(--gradient-angle), var(--spectrum), #FF6B6B);
+    transition: opacity .25s ease;
+}
+.animated-card:hover::before,
+.animated-card.tap-gradient::before {
+    opacity: 1;
+    animation: rotateGradient 3s linear infinite;
+}
+.animated-card.is-visible::before {
+    animation: entrancePulse 1.35s ease both;
+}
+@keyframes rotateGradient {
+    to { --gradient-angle: 360deg; }
+}
+@keyframes entrancePulse {
+    0% { opacity: 0; --gradient-angle: 0deg; }
+    16% { opacity: 1; }
+    72% { opacity: 1; --gradient-angle: 300deg; }
+    100% { opacity: 0; --gradient-angle: 360deg; }
+}
+
+/* Hero */
+.hero {
+    color: #fff;
+    padding: 74px 0 58px;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 12% 15%, rgba(102,126,234,0.38), transparent 32rem),
+        radial-gradient(circle at 90% 8%, rgba(118,75,162,0.38), transparent 30rem),
+        radial-gradient(circle at 80% 82%, rgba(255,107,107,0.16), transparent 28rem),
+        #0F0F1A;
+    animation: heroBreathing 10s ease-in-out infinite alternate;
+}
+@keyframes heroBreathing {
+    0% {
+        background:
+            radial-gradient(circle at 12% 15%, rgba(102,126,234,0.38), transparent 32rem),
+            radial-gradient(circle at 90% 8%, rgba(118,75,162,0.38), transparent 30rem),
+            radial-gradient(circle at 80% 82%, rgba(255,107,107,0.16), transparent 28rem),
+            #0F0F1A;
+    }
+    100% {
+        background:
+            radial-gradient(circle at 18% 24%, rgba(79,172,254,0.32), transparent 34rem),
+            radial-gradient(circle at 86% 16%, rgba(240,147,251,0.32), transparent 30rem),
+            radial-gradient(circle at 70% 88%, rgba(255,142,83,0.18), transparent 28rem),
+            #141428;
+    }
+}
+.hero-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(320px, .95fr);
+    gap: 44px;
+    align-items: center;
+}
+.hero-copy { min-width: 0; }
+.breadcrumb {
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.66);
+    margin-bottom: 24px;
+    letter-spacing: .02em;
+}
+.hero h1 {
+    color: #fff;
+    font-size: clamp(40px, 5.2vw, 64px);
+    line-height: 1.02;
+    margin-bottom: 24px;
+}
+.gradient-text,
+.hero h1 .gradient-text {
+    background: var(--gradient-b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.hero-intro {
+    font-size: 1.12rem;
+    color: rgba(255,255,255,0.76);
+    margin-bottom: 22px;
+    line-height: 1.72;
+}
+.meta-bar {
+    font-size: 13px;
+    color: rgba(255,255,255,0.58);
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    margin-bottom: 30px;
+}
+.hero-visual {
+    display: grid;
+    gap: 18px;
+}
+.hero-banner {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 24px;
+    margin: 0;
+    display: block;
+    border: 1px solid rgba(255,255,255,0.14);
+    box-shadow: 0 24px 80px rgba(0,0,0,.35);
+}
+.hero-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 14px;
+}
+.stat-card {
+    min-height: 112px;
+    padding: 18px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.13);
+    backdrop-filter: blur(16px);
+    position: relative;
+    overflow: hidden;
+}
+.stat-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: conic-gradient(from var(--gradient-angle), var(--spectrum), #FF6B6B);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: rotateGradient 6s linear infinite;
+}
+.stat-card::after {
+    content: attr(data-value) "\A" attr(data-label);
+    white-space: pre-line;
+    position: relative;
+    z-index: 1;
+    display: block;
+    font-weight: 800;
+    font-size: 22px;
+    line-height: 1.1;
+    color: #fff;
+}
+.stat-card span::after {
+    content: "";
+    display: block;
+    width: 44px;
+    height: 5px;
+    margin-top: 14px;
+    border-radius: 999px;
+    background: var(--gradient-d);
+}
+
+/* Hero widgets */
+.quick-answer {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.13);
+    border-left: 4px solid #667EEA;
+    padding: 24px;
+    border-radius: 18px;
+    margin-bottom: 26px;
+    box-shadow: none;
+}
+.quick-answer .ui-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: block;
+    color: #AEBBFF;
+}
+.quick-answer p { color: rgba(255,255,255,0.78); margin-bottom: 0; }
+.quick-answer strong { color: #fff; }
+.intent-widget {
+    overflow: hidden;
+    margin-bottom: 0;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 18px;
+    box-shadow: none;
+}
+.intent-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0,1fr));
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+}
+.intent-tab {
+    padding: 12px 8px;
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 13px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.62);
+    font-weight: 800;
+}
+.intent-tab.active {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    box-shadow: inset 0 -2px 0 #667EEA;
+}
+.intent-content {
+    padding: 22px;
+    display: none;
+    font-size: 15px;
+    color: rgba(255,255,255,0.76);
+}
+.intent-content.active { display: block; animation: fadeIn 0.3s; }
+.intent-content strong { color: #fff; }
+.intent-content a { color: #9DB0FF; font-weight: 800; }
+
+/* Headings and spectrum */
+section h2 {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    font-size: clamp(30px, 3vw, 42px);
+    margin-bottom: 20px;
+}
+section h2::before {
+    content: "";
+    width: 92px;
+    height: 8px;
+    border-radius: 999px;
+    background:
+        linear-gradient(90deg,
+            #FF6B6B 0 22%,
+            transparent 22% 26%,
+            #667EEA 26% 48%,
+            transparent 48% 52%,
+            #F093FB 52% 74%,
+            transparent 74% 78%,
+            #4FACFE 78% 100%);
+    box-shadow: 0 8px 18px rgba(102,126,234,.18);
+}
+section h3 {
+    font-size: 1.24rem;
+    margin: 24px 0 14px;
+}
+.ui-label {
+    color: #667EEA;
+    text-transform: uppercase;
+    letter-spacing: .11em;
+    font-size: 12px;
+}
+
+/* Images */
+.nav-logo { display: none; }
+.hero-banner,
+.section-image,
+.saas-screenshot,
+.product-image {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+.section-image {
+    width: 100%;
+    border-radius: 22px;
+    margin: 32px 0;
+    display: block;
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--color-border);
+    background: #fff;
+}
+.method-image {
+    margin: 22px 0 20px;
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(17,24,39,0.1);
+}
+.saas-screenshot {
+    width: 100%;
+    border-radius: 14px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.32);
+    margin-bottom: 20px;
+    display: block;
+}
+.product-visual-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 18px;
+    align-items: center;
+    margin-top: 20px;
+}
+.product-image {
+    width: 100%;
+    max-height: 310px;
+    object-fit: contain;
+    border-radius: 18px;
+    padding: 18px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+}
+
+/* TOC and cards */
+.toc-card,
+.quiz-container,
+.compat-widget,
+.comp-card,
+.accordion-item {
+    background: #fff;
+    border-radius: var(--radius-card);
+}
+.toc-card {
+    padding: 26px;
+    margin-bottom: 54px;
+}
+.toc-card h3 {
+    font-size: 1.2rem;
+    margin: 0 0 16px;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 10px;
+}
+.toc-list { list-style: none; padding: 0; margin: 0; }
+.toc-list li { margin-bottom: 9px; }
+.toc-list a { font-size: 15px; font-weight: 800; color: #667EEA; }
+.toc-list a:hover { color: #764BA2; }
+
+.badge {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    border-radius: 999px;
+    background: rgba(102,126,234,0.12);
+    color: #667EEA;
+    margin-bottom: 14px;
+}
+
+/* Methods editorial cards */
+.method-stack {
+    display: grid;
+    gap: 24px;
+    margin-top: 32px;
+}
+.method-card {
+    padding: 28px;
+    overflow: hidden;
+}
+.method-card h3 {
+    margin-top: 0;
+    font-size: 1.55rem;
+}
+.method-card.gradient-a { border-top: 5px solid #FF6B6B; }
+.method-card.gradient-b { border-top: 5px solid #667EEA; }
+.method-card.gradient-c { border-top: 5px solid #F093FB; }
+.method-card.gradient-d { border-top: 5px solid #4FACFE; }
+.difficulty-bar {
+    height: 9px;
+    background: #EEF0F5;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 18px;
+}
+.difficulty-bar .bar-fill {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: inherit;
+    transition: width 1.1s cubic-bezier(.2,.8,.2,1);
+}
+.method-card.is-visible .bar-fill { width: var(--fill); }
+.gradient-a .bar-fill { background: var(--gradient-a); }
+.gradient-b .bar-fill { background: var(--gradient-b); }
+.gradient-c .bar-fill { background: var(--gradient-c); }
+.gradient-d .bar-fill { background: var(--gradient-d); }
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 24px 0 40px;
+    font-size: 15px;
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+}
+th, td { padding: 16px; text-align: left; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+th {
+    background: var(--gradient-b);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1rem;
+}
+tr:last-child td { border-bottom: none; }
+.highlight-col {
+    background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.16));
+    color: #2d388f;
+    font-weight: 800;
+}
+th.highlight-col {
+    background: var(--gradient-b);
+    color: #fff;
+    box-shadow: inset 0 -4px 0 rgba(255,255,255,0.26);
+}
+
+/* Premium SaaS Moment */
+.saas-moment {
+    background:
+        radial-gradient(circle at 20% 10%, rgba(102,126,234,0.30), transparent 31rem),
+        radial-gradient(circle at 82% 18%, rgba(240,147,251,0.25), transparent 31rem),
+        radial-gradient(circle at 50% 100%, rgba(79,172,254,0.16), transparent 36rem),
+        #0F0F1A;
+    color: #f3f4f6;
+    text-align: center;
+}
+.saas-moment h2 { color: #ffffff; justify-content: center; }
+.saas-moment h2::before { display: inline-block; }
+.saas-moment p { color: rgba(255,255,255,0.72); max-width: 680px; margin: 0 auto 32px; }
+.saas-moment strong { color: #fff; }
+.saas-mockup {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 24px;
+    padding: 24px;
+    max-width: 860px;
+    margin: 0 auto 32px;
+    box-shadow: 0 28px 80px rgba(0,0,0,0.36);
+}
+.saas-mockup > div {
+    border-radius: 20px !important;
+}
+.saas-chips { display: flex; justify-content: center; gap: 14px; margin-bottom: 32px; flex-wrap: wrap; }
+.chip {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 9px 16px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 800;
+}
+.saas-actions { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+.saas-actions .btn {
+    border-color: rgba(255,255,255,0.42);
+    color: #fff;
+}
+.saas-actions .btn:hover { color: #fff; }
+
+/* Interactive widgets */
+.quiz-container {
+    padding: 32px;
+    margin: 40px 0;
+    text-align: center;
+}
+.quiz-question {
+    font-size: 1.2rem;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    margin-bottom: 24px;
+    color: #111827;
+}
+.quiz-options button {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto 12px;
+    padding: 13px;
+    background: #F6F7FB;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    font-family: var(--font-body);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.quiz-options button:hover {
+    background: linear-gradient(135deg, rgba(102,126,234,0.12), rgba(118,75,162,0.14));
+    border-color: #667EEA;
+    color: #2d388f;
+}
+.quiz-result {
+    display: none;
+    padding: 20px;
+    background: #F6F7FB;
+    border-radius: 16px;
+    border-left: 4px solid #667EEA;
+    text-align: left;
+}
+.compat-widget {
+    padding: 24px;
+    margin: 32px 0;
+}
+.compat-widget select {
+    width: 100%;
+    padding: 13px;
+    font-size: 16px;
+    font-family: var(--font-body);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    background: #fff;
+}
+.compat-result {
+    padding: 16px;
+    background: #F6F7FB;
+    border-radius: 12px;
+    font-size: 15px;
+    display: none;
+}
+
+/* Toggle */
+.toggle-wrapper { text-align: center; margin-bottom: 32px; }
+.toggle-bg {
+    display: inline-flex;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px;
+    padding: 4px;
+    position: relative;
+}
+.toggle-btn {
+    background: transparent;
+    border: none;
+    padding: 9px 24px;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 15px;
+    cursor: pointer;
+    color: rgba(255,255,255,0.66);
+    position: relative;
+    z-index: 2;
+    transition: color 0.3s;
+}
+.toggle-btn.active { color: #111827; }
+.toggle-slider {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    height: calc(100% - 8px);
+    width: 50%;
+    background: #fff;
+    border-radius: 999px;
+    transition: transform 0.3s ease;
+    z-index: 1;
+}
+.toggle-content-pane { display: none; }
+.toggle-content-pane.active { display: block; animation: fadeIn 0.4s; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+.comp-card { padding: 24px; position: relative; overflow: hidden; margin-top: 24px; text-align: left; }
+.comp-card.highlight::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 5px; height: 100%;
+    background: var(--gradient-b);
+}
+.comp-stat {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 14px;
+    border-bottom: 1px dashed rgba(255,255,255,0.16);
+    padding: 12px 0;
+}
+
+/* Accordion & FAQ */
+.accordion-item {
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+.accordion-header {
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    padding: 18px 20px;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1.05rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #111827;
+}
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    padding: 0 20px;
+}
+.accordion-content p { padding: 10px 0 20px 0; margin: 0; font-size: 15px; }
+.accordion-header.active { background: linear-gradient(135deg, rgba(102,126,234,0.10), rgba(240,147,251,0.10)); }
+.icon-plus::after { content: '+'; font-size: 1.2rem; }
+.accordion-header.active .icon-plus::after { content: '−'; }
+.faq-layout { display: flex; gap: 40px; margin-top: 40px; }
+.faq-sidebar { flex: 0 0 250px; }
+.faq-sidebar-inner { position: sticky; top: 92px; }
+.faq-cat { display: block; margin-bottom: 12px; font-family: var(--font-heading); font-weight: 800; color: var(--color-muted); cursor: pointer; }
+.faq-cat.active { color: #667EEA; }
+
+/* Footer */
+footer {
+    background:
+        radial-gradient(circle at 15% 20%, rgba(102,126,234,0.18), transparent 24rem),
+        #0F0F1A;
+    color: #A8AFBD;
+    padding: 66px 24px;
+    font-size: 14px;
+}
+.footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.15fr 1fr 1fr;
+    gap: 42px;
+}
+footer .site-brand { color: #fff !important; margin-bottom: 0 !important; }
+.footer-inner a { color: #D9DEFF; font-weight: 700; }
+.footer-inner a:hover { color: #fff; }
+footer h4 { color: #fff !important; margin-bottom: 16px; font-family: var(--font-heading) !important; letter-spacing: -0.02em; }
+.editorial-disclosure {
+    grid-column: 1 / -1;
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* Responsive */
+@media(max-width: 900px) {
+    .hero-shell { grid-template-columns: 1fr; }
+    .hero-visual { order: -1; }
+}
+@media(max-width: 768px) {
+    header { min-height: 66px; }
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 66px;
+        left: 12px;
+        right: 12px;
+        width: calc(100% - 24px);
+        background: #fff;
+        border: 1px solid var(--color-border);
+        border-radius: 18px;
+        flex-direction: column;
+        padding: 18px;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+    }
+    .nav-links.show { display: flex; }
+    .menu-toggle { display: inline-flex; align-items:center; justify-content:center; }
+    .faq-layout { flex-direction: column; }
+    .faq-sidebar { display: none; }
+    section h2 { grid-template-columns: 1fr; gap: 12px; }
+    section h2::before { width: 82px; }
+    .footer-inner { grid-template-columns: 1fr; }
+    .intent-tabs { grid-template-columns: 1fr; }
+    .hero-stat-grid { grid-template-columns: 1fr 1fr; }
+    .product-visual-row { grid-template-columns: 1fr; }
+    table { display: block; overflow-x: auto; }
+}
+@media(max-width: 460px) {
+    .hero-stat-grid { grid-template-columns: 1fr; }
+    .header-inner { padding: 0 16px; }
+    .site-brand { font-size: 16px; }
+    .security-mark { width: 34px; height: 34px; }
+}
+</style>
+</head>
+<body>
+<header>
+<div class="header-inner">
+<div class="brand-wrapper">
+<svg aria-label="USBSecurityHub security mark" class="security-mark" role="img" viewbox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient gradientunits="userSpaceOnUse" id="brandShieldGradient" x1="10" x2="55" y1="8" y2="58">
+<stop stop-color="#667EEA"></stop>
+<stop offset="0.48" stop-color="#764BA2"></stop>
+<stop offset="1" stop-color="#00F2FE"></stop>
+</lineargradient>
+<lineargradient gradientunits="userSpaceOnUse" id="brandKeyGradient" x1="17" x2="48" y1="25" y2="42">
+<stop stop-color="#FF6B6B"></stop>
+<stop offset="1" stop-color="#FF8E53"></stop>
+</lineargradient>
+</defs>
+<path d="M32 5.5 52 13v15.8c0 13.2-8.1 24.9-20 29.7-11.9-4.8-20-16.5-20-29.7V13L32 5.5Z" fill="url(#brandShieldGradient)"></path>
+<path d="M32 11.7 46.7 17v12.2c0 9.1-5.8 17.7-14.7 21.7-8.9-4-14.7-12.6-14.7-21.7V17L32 11.7Z" fill="#0F0F1A" opacity=".85"></path>
+<path d="M28.3 36.9a8.4 8.4 0 1 1 4.4 4.4l-4.9 4.9h-4.4v-4.4l4.9-4.9Zm7.2-5.4a3.4 3.4 0 1 0 0-6.8 3.4 3.4 0 0 0 0 6.8Z" fill="url(#brandKeyGradient)"></path>
+</svg>
+<div class="site-brand">USBSecurityHub</div>
+</div>
+<button aria-label="Toggle Navigation" class="menu-toggle">☰</button>
+<nav class="nav-links">
+<a href="#overview">Overview</a>
+<a href="#methods">Methods</a>
+<a href="#comparison">Compare</a>
+<a href="#tutorial">Tutorial</a>
+<a href="#troubleshooting">Troubleshooting</a>
+<a class="nav-cta" href="#recommendation">See Our Top Pick →</a>
+</nav>
+</div>
+</header>
+<section class="hero">
+<div class="container-wide hero-shell"><div class="hero-copy"><div class="breadcrumb">Home › Guides › Hardware Security</div><h1>How to Password Protect a <span class="gradient-text">USB Drive</span> on Windows and Mac</h1><p class="hero-intro">Securing a portable drive requires a different approach than locking a local desktop folder. Because thumb drives move between devices, the protection method you choose must survive transit, support different operating systems, and guard against physical theft.</p><div class="meta-bar">Editorial Team · Updated May 2026 · 14 min read</div><div class="quick-answer animated-card">
+<span class="ui-label">Can you password protect a USB folder across macOS and Windows?</span>
+<p>Yes, but you cannot use built-in OS tools to do it seamlessly. Mac's native FileVault encryption is unreadable on Windows, and Windows' BitLocker is unreadable on Mac. To securely lock a folder on a USB drive and open it on both platforms, you must format the drive to ExFAT and use a cross-platform third-party encryption tool (like Folder Lock) that installs companion decryptors on both operating systems.</p>
+</div><div class="intent-widget animated-card" id="intent-selector">
+<div class="intent-tabs">
+<button class="intent-tab active" data-tab="intent-howto">How-To</button>
+<button class="intent-tab" data-tab="intent-compare">Comparison</button>
+<button class="intent-tab" data-tab="intent-troubleshoot">Troubleshooting</button>
+<button class="intent-tab" data-tab="intent-recover">Recovery</button>
+</div>
+<div class="intent-content active" id="intent-howto">
+<strong>Looking for instructions?</strong> Jump straight to our <a href="#methods">Methods Guide</a> to see how to use BitLocker, Disk Utility, or standalone software to lock your drive.
+                </div>
+<div class="intent-content" id="intent-compare">
+<strong>Not sure which tool to use?</strong> Skip to our <a href="#comparison">Head-to-Head Comparison Table</a> to see the differences between free OS tools and premium software.
+                </div>
+<div class="intent-content" id="intent-troubleshoot">
+<strong>Is your drive acting up?</strong> Head down to our <a href="#troubleshooting">Troubleshooting Matrix</a> to diagnose formatting issues, unreadable drives, and software glitches.
+                </div>
+<div class="intent-content" id="intent-recover">
+<strong>Lost your password?</strong> Read our <a href="#faq">Data Recovery FAQ</a> to understand your options regarding AES-256 encryption lockouts and recovery keys.
+                </div>
+</div></div><div class="hero-visual"><img alt="A USB drive successfully plugged into a laptop port, representing secure portable storage" class="hero-banner" src="https://i.ibb.co/twHL35yP/USB-drive-successful-plugged.jpg"/><div aria-hidden="true" class="hero-stat-grid">
+<div class="stat-card" data-label="Encryption" data-value="AES-256"><span></span></div>
+<div class="stat-card" data-label="Portability" data-value="Mac/Win"><span></span></div>
+<div class="stat-card" data-label="Unlocking" data-value="No Admin"><span></span></div>
+<div class="stat-card" data-label="Ready" data-value="ExFAT"><span></span></div>
+</div></div></div>
+</section>
+<section class="section-pad bg-alt" id="overview">
+<div class="container-reading">
+<div class="toc-card animated-card" style="text-align: left;">
+<h3>Table of Contents</h3>
+<ul class="toc-list">
+<li><a href="#why-secure">Why USB Drives Are a Major Security Risk</a></li>
+<li><a href="#requirements">What You Need Before Starting</a></li>
+<li><a href="#methods">How to Password Protect a USB Drive — All Methods</a></li>
+<li><a href="#comparison">BitLocker vs. Third-Party Software Comparison</a></li>
+<li><a href="#threats">Hardware Encryption vs BadUSB Threats</a></li>
+<li><a href="#recommendation">The Tool We Recommend for Most Users</a></li>
+<li><a href="#tutorial">Step-by-Step Security Tutorial</a></li>
+<li><a href="#disposal">Safe USB Disposal and Data Wiping</a></li>
+<li><a href="#troubleshooting">Troubleshooting Matrix</a></li>
+<li><a href="#faq">Frequently Asked Questions</a></li>
+</ul>
+</div>
+<h2 id="why-secure">Why USB Drives Are a Major Security Risk</h2>
+<img alt="Abstract representation of confidential file protection and enterprise data security" class="section-image" src="https://i.ibb.co/1JY3f7Dd/Confidential-File-Protection.jpg"/>
+<p>Flash drives are designed for ultimate portability, making them highly susceptible to being misplaced in coffee shops, left in airport lounges, or stolen from backpacks. Without adequate security, anyone who finds your drive has immediate, unrestricted access to your financial records, client data, or personal media.</p>
+<p>Simply hiding files or zipping them up is not enough. True security requires robust cryptographic defense (like <a href="https://psbios.com/file-encryption-explained/" rel="noopener noreferrer" target="_blank">AES-256</a>). The goal is to ensure that even if the physical hardware is compromised, the data remains mathematically unreadable without the correct master password.</p>
+<h3 class="ui-label" style="margin-top: 32px;">USB Security Risk Assessment</h3>
+<p>Not sure how secure your current portable data setup is? Use our interactive tool below.</p>
+<!-- INTERACTIVE: Risk Assessment Quiz -->
+<div class="quiz-container animated-card" id="risk-quiz">
+<div class="quiz-question-block" id="quiz-q1">
+<div class="quiz-question">1. What kind of data do you carry on your USB drive?</div>
+<div class="quiz-options">
+<button onclick="nextQ(2, 'low')">Public files / school drafts</button>
+<button onclick="nextQ(2, 'med')">Personal photos / backups</button>
+<button onclick="nextQ(2, 'high')">Client data / financial records</button>
+</div>
+</div>
+<div class="quiz-question-block" id="quiz-q2" style="display:none;">
+<div class="quiz-question">2. How often does this drive leave your home or office?</div>
+<div class="quiz-options">
+<button onclick="nextQ(3, 'low')">Rarely, it stays on my desk</button>
+<button onclick="nextQ(3, 'med')">Sometimes, in a secure bag</button>
+<button onclick="nextQ(3, 'high')">Daily commute / public transit</button>
+</div>
+</div>
+<div class="quiz-question-block" id="quiz-q3" style="display:none;">
+<div class="quiz-question">3. What is currently protecting the files?</div>
+<div class="quiz-options">
+<button onclick="showResult('high')">Nothing / Just hidden folders</button>
+<button onclick="showResult('med')">A basic ZIP password</button>
+<button onclick="showResult('low')">Full AES-256 encryption</button>
+</div>
+</div>
+<div class="quiz-result" id="quiz-result">
+<h4 style="margin-bottom: 8px;">Your Risk Profile: <span id="risk-level"></span></h4>
+<p id="risk-desc" style="margin:0;"></p>
+<button class="btn" onclick="resetQuiz()" style="margin-top: 16px; padding: 8px 16px; font-size: 12px;">Retake Quiz</button>
+</div>
+</div>
+</div>
+</section>
+<section class="section-pad" id="requirements">
+<div class="container-reading">
+<h2>Requirements: What You Need Before Starting</h2>
+<p>Before applying a password lock to your external drive, ensure you have the following prepared to avoid accidental data loss:</p><img alt="Sensitive personal data prepared for backup before USB drive encryption" class="section-image" decoding="async" loading="lazy" src="https://i.ibb.co/Zpt5NfpT/sensitive-personal-data.jpg"/>
+<ul>
+<li><strong>A complete data backup:</strong> If you are using native OS tools (like Mac Disk Utility), the drive will be formatted (erased) during the encryption process. Move your files to your desktop temporarily.</li>
+<li><strong>The correct file system format:</strong> If you intend to use the drive strictly on Windows, NTFS is fine. If you intend to use it across Mac and Windows, it must be formatted as <strong>exFAT</strong> or <strong>FAT32</strong> before applying third-party security.</li>
+<li><strong>A secure password manager:</strong> Because true encryption lacks a "forgot password" email reset link, losing your password means losing the data forever. Ensure your intended password is recorded safely.</li>
+</ul>
+</div>
+</section>
+<section class="section-pad bg-alt" id="methods">
+<div class="container-reading"><h2>How to Password Protect a USB Drive — All Methods</h2><p>There are several approaches to securing external media. We have detailed the most reliable methods below, ranging from native operating system utilities to specialized third-party tools.</p><div class="method-stack"><article class="method-card animated-card gradient-a"><h3 class="ui-label" style="margin-top: 40px;">Method 1: <a href="https://windowsreport.com/encrypt-usb-flash-drive-windows/" rel="noopener noreferrer" target="_blank">Windows BitLocker To Go</a></h3><span class="badge">Native OS (Windows Pro/Enterprise)</span><p>BitLocker To Go is Microsoft's native encryption feature designed specifically for removable data drives. It utilizes AES encryption to scramble the entire contents of the drive at the sector level.</p><img alt="Windows encryption settings showing BitLocker and device encryption options for removable drives" class="section-image method-image" decoding="async" loading="lazy" src="https://i.ibb.co/5x1DxZg3/windows-11-encryption-efs-bitlocker-and-device-encryption.jpg"/>
+<ul>
+<li><strong>How it works:</strong> Right-click the USB drive in Windows Explorer and select "Turn on BitLocker." You will be prompted to create a password and save a 48-digit recovery key.</li>
+<li><strong>Pros:</strong> Deep OS integration; requires no third-party downloads; highly secure.</li>
+<li><strong>Cons:</strong> You cannot encrypt a drive if you use Windows 10/11 Home (though the Home edition can unlock an already-encrypted drive). It is essentially unreadable on macOS or Linux machines without purchasing specialized third-party reader software.</li>
+</ul><div aria-hidden="true" class="difficulty-bar" style="--fill:62%;"><span class="bar-fill"></span></div></article><article class="method-card animated-card gradient-b"><h3 class="ui-label" style="margin-top: 40px;">Method 2: Mac Disk Utility (Encrypted APFS)</h3><span class="badge">Native OS (macOS)</span><p>Apple provides robust native encryption through its Disk Utility app, allowing you to format a flash drive securely using the APFS architecture.</p><img alt="Native macOS security interface representing Disk Utility encryption for USB drives" class="section-image method-image" decoding="async" loading="lazy" src="https://i.ibb.co/4Rr8X43J/Native-mac-OS-UI-Experience.jpg"/>
+<ul>
+<li><strong>How it works:</strong> Open Disk Utility, select the USB drive, click "Erase," and choose "APFS (Encrypted)" as the format. You will be prompted for a password.</li>
+<li><strong>Pros:</strong> Lightning fast on modern Macs; tightly integrated with macOS Keychain; very strong encryption.</li>
+<li><strong>Cons:</strong> Erasing the drive destroys any existing data. The drive becomes completely invisible and unreadable on Windows PCs.</li>
+</ul><div aria-hidden="true" class="difficulty-bar" style="--fill:48%;"><span class="bar-fill"></span></div></article><article class="method-card animated-card gradient-c"><h3 class="ui-label" style="margin-top: 40px;">Method 3: Portable Security Software (e.g., <a href="https://www.softlay.com/downloads/usb-secure" rel="noopener noreferrer" target="_blank">USB Secure</a> / VeraCrypt)</h3><span class="badge">Third-Party (Cross-Platform / Portable)</span><img alt="Interface and concept of USB disk security software protecting files on portable media" class="section-image" src="https://i.ibb.co/TDtqFLT2/usb-disk-security-software.jpg"/><p>Dedicated security software addresses the limitations of built-in OS tools by installing a lightweight authentication client directly onto the USB drive itself, creating an encrypted vault rather than scrambling the entire file system architecture.</p><img alt="USB Secure password dialog showing portable drive unlock protection" class="section-image method-image" decoding="async" loading="lazy" src="https://i.ibb.co/NnprhyFP/usb-secure-password-dialog-screenshot.jpg"/>
+<ul>
+<li><strong>How it works:</strong> You run a setup application that places a secure executable on the root of your thumb drive. When you plug the drive into a new computer, you run this executable and enter your password to mount a virtual drive containing your files.</li>
+<li><strong>Pros:</strong> True plug-and-play portability; does not require administrative privileges to unlock on the host computer; works across Windows versions seamlessly; preserves existing data without requiring a format.</li>
+<li><strong>Cons:</strong> Commercial tools require purchasing a software license for unlimited usage. Open-source tools like VeraCrypt are highly secure but have a steep learning curve and often require administrative rights to mount volumes on the guest PC.</li>
+</ul><div aria-hidden="true" class="difficulty-bar" style="--fill:82%;"><span class="bar-fill"></span></div></article></div></div>
+</section>
+<section class="section-pad" id="comparison">
+<div class="container-wide">
+<h2>BitLocker to Go vs. Third-Party Software</h2>
+<p>Comparing the built-in Windows method against dedicated portable software solutions like Folder Lock or USB Secure.</p>
+<img alt="Cross-platform synchronization diagram showing seamless data transfer between operating systems" class="section-image" src="https://i.ibb.co/jZfz7Hzz/Cross-Platform-Synchronization.jpg"/>
+<table>
+<thead>
+<tr>
+<th>Feature / Capability</th>
+<th>BitLocker To Go</th>
+<th class="highlight-col">Portable Software (USB Secure)</th>
+<th>Open Source (VeraCrypt)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Encrypt on Windows Home?</strong></td>
+<td>No (Requires Pro/Enterprise)</td>
+<td class="highlight-col">Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>Admin Rights to Unlock?</strong></td>
+<td>Often required for first mount</td>
+<td class="highlight-col">No Admin Rights Needed</td>
+<td>Yes (Requires Admin)</td>
+</tr>
+<tr>
+<td><strong>Format Required First?</strong></td>
+<td>No</td>
+<td class="highlight-col">No</td>
+<td>Usually Yes (for full drive)</td>
+</tr>
+<tr>
+<td><strong>Cross-Platform (Mac/Win)</strong></td>
+<td>No (Requires 3rd party reader)</td>
+<td class="highlight-col">Yes (via companion apps)</td>
+<td>Yes (if software installed on both)</td>
+</tr>
+<tr>
+<td><strong>Encryption Standard</strong></td>
+<td>AES-128 / AES-256</td>
+<td class="highlight-col">AES-256</td>
+<td>AES-256, Serpent, Twofish</td>
+</tr>
+</tbody>
+</table>
+<div class="compat-widget animated-card">
+<h3 class="ui-label" style="margin-top:0;">Device &amp; Platform Compatibility Checker</h3>
+<label for="os-select" style="display:block; margin-bottom: 8px; font-weight:600;">Where do you need to open this USB drive?</label>
+<select id="os-select" onchange="checkCompat()">
+<option value="">-- Select your usage scenario --</option>
+<option value="win-only">Only on Windows PCs (Mix of Pro and Home)</option>
+<option value="mac-only">Only on Mac computers</option>
+<option value="cross">I swap it constantly between Windows and Mac</option>
+<option value="public">Public computers (Libraries, cafes, client offices)</option>
+</select>
+<div class="compat-result" id="compat-result"></div>
+</div>
+</div>
+</section>
+<section class="section-pad saas-moment" id="recommendation">
+<div class="container-wide">
+<span class="ui-label" style="color: var(--color-primary-accent); background: #fff; padding: 4px 12px; border-radius: 4px; font-size: 11px; margin-bottom: 20px; display: inline-block;">Editorial Pick</span>
+<h2>The Tools We Recommend for Most Users</h2>
+<p>Of all the options we covered, Native OS tools often fail when you need to share files across operating systems, or when you are stuck on a Windows Home edition PC that lacks BitLocker creation tools. For seamless, administrative-free portability, we recommend utilizing dedicated protection software.</p>
+<div class="saas-mockup">
+<div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 24px; text-align: center;">
+<img alt="USB Secure software interface showing locked portable drive and secure folders" class="saas-screenshot" src="https://i.ibb.co/1Y7Z4tmV/usb-secure-screen-1.png"/>
+<h3 style="font-family: var(--font-heading); color: #fff; font-size: 1.8rem; margin-bottom: 8px;">Military-Grade Portable Security</h3>
+<p style="color: #9ca3af; margin: 0; font-size: 15px;">Plug &amp; Play execution directly from the root of your drive.</p>
+<div class="product-visual-row">
+<img alt="Folder Lock 10 product boxshot for secure file and folder encryption" class="product-image" decoding="async" loading="lazy" src="https://i.ibb.co/V0Sw4tk7/folder-lock-10-boxshot.png"/>
+<img alt="USB Secure product boxshot and screenshot for password protecting portable drives" class="product-image" decoding="async" loading="lazy" src="https://i.ibb.co/dJX03kDG/usb-secure-product-box-screenshot.jpg"/>
+</div></div>
+</div>
+<div class="saas-chips">
+<span class="chip">No Admin Rights Needed</span>
+<span class="chip">AES-256 Encryption</span>
+<span class="chip">Works on Windows Home</span>
+</div>
+<p style="font-size: 16px; margin-bottom: 32px; max-width: 800px; margin-left: auto; margin-right: auto;">For locking flash drives specifically, <strong>USB Secure</strong> installs a lightweight client that grants instant virtual drive access. If you need comprehensive cross-platform protection—including cloud backup syncing, mobile vaults for iOS/Android, and military-grade file shredding—the full <strong>Folder Lock</strong> suite is the superior choice.</p>
+<div class="saas-actions">
+<a class="btn btn-solid" href="https://www.newsoftwares.net/download/folderlock10-en/folderlock10-en.exe" rel="noopener noreferrer" target="_blank">Try Folder Lock Free →</a>
+<a class="btn" href="https://www.softlay.com/downloads/usb-secure" rel="noopener noreferrer" target="_blank">View USB Secure →</a>
+</div>
+<!-- Signature Detail: Inline Comparison Toggle embedded in Layer 2 -->
+<div class="toggle-wrapper" style="margin-top: 48px;">
+<p style="color: #9ca3af; font-size: 14px; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px;">Software Trial vs Pro License</p>
+<div class="toggle-bg" id="version-toggle">
+<div class="toggle-slider" id="toggle-slider"></div>
+<button class="toggle-btn active" data-target="free-pane">Free Trial</button>
+<button class="toggle-btn" data-target="pro-pane">Full Version</button>
+</div>
+</div>
+<div class="container-reading">
+<div class="toggle-content-pane active" id="free-pane">
+<div class="comp-card animated-card" style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: #fff;">
+<h4 style="color:#fff;">Basic Trial Limitations</h4>
+<div class="comp-stat" style="border-color: rgba(255,255,255,0.1);"><span>Locker Size Limit</span> <span>1 GB Maximum</span></div>
+<div class="comp-stat" style="border-color: rgba(255,255,255,0.1);"><span>Cloud Device Sync</span> <span>Up to 2 Devices</span></div>
+<div class="comp-stat" style="border-color: rgba(255,255,255,0.1);"><span>Usage Alerts</span> <span>Trial Prompts Active</span></div>
+</div>
+</div>
+<div class="toggle-content-pane" id="pro-pane">
+<div class="comp-card highlight animated-card" style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: #fff;">
+<h4 style="color:#fff;">Unrestricted Pro Security</h4>
+<div class="comp-stat" style="border-color: rgba(255,255,255,0.1);"><span>Locker Size Limit</span> <span>Unlimited (Drive Capacity)</span></div>
+<div class="comp-stat" style="border-color: rgba(255,255,255,0.1);"><span>Cloud Device Sync</span> <span>Up to 5 Devices</span></div>
+<div class="comp-stat" style="border-color: rgba(255,255,255,0.1);"><span>Advanced Tools</span> <span>File Shredder, History Cleaner</span></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="section-pad bg-alt" id="threats">
+<div class="container-reading">
+<h2>Hardware Encryption vs Software vs BadUSB</h2>
+<img alt="Illustration of USB drive virus, malware detection, and BadUSB prevention" class="section-image" src="https://i.ibb.co/23wDmkss/usb-drive-virus-and-malware-detection-and-prevention.jpg"/>
+<p>Beyond software tools, you can purchase physical USB drives with built-in hardware encryption (often featuring physical numeric keypads on the chassis). These are highly secure and OS-agnostic, but they are significantly more expensive and if the internal controller fails, data recovery is virtually impossible.</p>
+<p><strong>The <a href="https://security.stackexchange.com/questions/118854/attacks-via-physical-access-to-usb-dma" rel="noopener noreferrer" target="_blank">BadUSB</a> Threat:</strong> Be aware that password protecting the files on a drive does not protect your computer from the drive itself. A "BadUSB" attack occurs when the firmware of a flash drive is reprogrammed to act like a keyboard. When plugged in, it rapidly types malicious commands into your machine. Encryption software secures your data from thieves; it does not sanitize the hardware firmware.</p>
+</div>
+</section>
+<section class="section-pad" id="tutorial">
+<div class="container-reading">
+<h2>Step-by-Step Security Tutorial</h2>
+<p>If you have decided to use dedicated portable software (like USB Secure or Folder Lock), the setup process is straightforward and, crucially, does not require formatting your drive.</p>
+<ol>
+<li><strong>Connect Your Drive:</strong> Insert the flash drive into your computer's USB port. Ensure the host computer recognizes it.</li>
+<li><strong>Install the Client:</strong> Launch your chosen security software on your main PC. Select the option to "Create Portable Locker" or "Protect USB Drive."</li>
+<li><strong>Select the Target:</strong> The software will scan for external media. Select your specific USB drive from the drop-down menu.</li>
+<li><strong>Set a Master Password:</strong> Create a strong, memorable password. <strong>Warning:</strong> Because these tools use true cryptographic standards, there is no "forgot password" backdoor.</li>
+<li><strong>Transfer Files:</strong> The software will create a secure, hidden container on the drive. You can now drag and drop sensitive files into this encrypted vault.</li>
+<li><strong>Safely Eject:</strong> Close the application, use your OS's "Safely Remove Hardware" function, and unplug the drive.</li>
+</ol><img alt="Secure virtual drive interface showing encrypted USB vault access after unlocking" class="section-image" decoding="async" loading="lazy" src="https://i.ibb.co/q3LHT6Kb/Secure-Virtual-Drive.jpg"/>
+<h3>How to Verify It Worked</h3>
+<p>Never assume the protection applied correctly on the first try. To verify:</p>
+<ul>
+<li>Unplug the USB drive and plug it back into a <strong>different</strong> computer if possible.</li>
+<li>Attempt to browse the files normally through the OS file explorer. You should only see the software executable (or a locked drive icon), not your sensitive data.</li>
+<li>Run the executable, enter an <strong>incorrect</strong> password, and ensure access is denied.</li>
+</ul>
+<h3>Common Mistakes to Avoid</h3>
+<ul>
+<li><strong>Losing the Recovery Key:</strong> If using BitLocker, failing to save the 48-digit key to a safe external location.</li>
+<li><strong>Using "Folder Hiding" instead of Encryption:</strong> Basic privacy tools (like Folder Lock Lite) only hide the folder from the OS interface. A tech-savvy user can bypass this using command-line tools. Always use AES encryption for portable drives.</li>
+</ul>
+</div>
+</section>
+<section class="section-pad bg-alt" id="disposal">
+<div class="container-reading">
+<h2>USB Security Policies and Safe Disposal</h2>
+<h3>Enterprise &amp; Air-Gapped Networks</h3>
+<p>For organizations, allowing employees to use unencrypted personal flash drives is a massive liability. Enterprise environments should enforce <a href="https://www.1888pressrelease.com/usb-block-1-7-0-prevent-data-leaks-by-restricting-usb-driv-pr-611593.html" rel="noopener noreferrer" target="_blank">USB security policies</a> via Group Policy (GPO) to block unapproved external media entirely, or mandate the use of FIPS 140-2 certified hardware-encrypted drives. In highly secure "air-gapped" networks (computers not connected to the internet), portable software encryption clients are critical for securely transferring data between isolated nodes.</p>
+<h3>Safe USB Disposal and Data Wiping</h3>
+<img alt="A secure USB flash drive representing safe disposal and security best practices" class="section-image" src="https://i.ibb.co/HDN357D3/usb-flash-drive-security-best-practices.jpg"/>
+<p>Simply dragging files to the trash bin or doing a "Quick Format" on a USB drive does not remove the data—it merely marks the space as available to be overwritten. Free recovery tools can easily restore these files. Before disposing of or donating an old USB drive, you must use a <a href="https://www.techradar.com/best/best-encryption-software" rel="noopener noreferrer" target="_blank">digital shredding tool</a> (a feature often included in comprehensive suites like Folder Lock) to overwrite the drive's free space with random data multiple times (e.g., DoD 5220.22-M standard).</p>
+</div>
+</section>
+<section class="section-pad" id="troubleshooting">
+<div class="container-wide">
+<h2>Troubleshooting Matrix</h2>
+<p>If you are struggling to access a drive you own, consult the matrix below for common causes and owner-safe recovery steps.</p><img alt="Locked removable drive technology concept for troubleshooting encrypted USB access" class="section-image" decoding="async" loading="lazy" src="https://i.ibb.co/B5FrzdY8/Drive-Locked-Technology.jpg"/>
+<p><strong>Note:</strong> We do not provide instructions on how to bypass or crack encryption on drives you do not legally own.</p>
+<table class="table-troubleshoot" style="margin-top: 24px;">
+<thead>
+<tr>
+<th>Problem</th>
+<th>Likely Cause</th>
+<th>How to Fix / Recover</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>"Format Disk" error when plugging into Mac</strong></td>
+<td>Drive was encrypted with Windows BitLocker.</td>
+<td>Do NOT click format. Decrypt the drive on a Windows PC first, or purchase a 3rd-party Mac BitLocker reader.</td>
+</tr>
+<tr>
+<td><strong>Executable file (.exe) won't run on public PC</strong></td>
+<td>Strict corporate/library network policy blocks all unknown applications.</td>
+<td>Wait until you have access to a personal or unrestricted computer to unlock the vault.</td>
+</tr>
+<tr>
+<td><strong>Forgot Password for BitLocker</strong></td>
+<td>Lost primary credential.</td>
+<td>Locate the 48-digit recovery key saved to your Microsoft account, printed, or saved on another drive during setup.</td>
+</tr>
+<tr>
+<td><strong>Forgot Password for Third-Party Software</strong></td>
+<td>Lost primary credential (No recovery key generated).</td>
+<td>Data is unrecoverable. You must format the drive to reuse the hardware, which permanently destroys the locked files.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="section-pad bg-alt" id="faq">
+<div class="container-wide">
+<div class="faq-layout">
+<aside class="faq-sidebar">
+<div class="faq-sidebar-inner">
+<h3 class="ui-label">FAQ Categories</h3>
+<span class="faq-cat active">Methods &amp; Software</span>
+<span class="faq-cat">Cross-Platform Issues</span>
+<span class="faq-cat">Security &amp; Threats</span>
+<span class="faq-cat">Data Recovery</span>
+</div>
+</aside>
+<div class="faq-content">
+<h2>Frequently Asked Questions</h2>
+<div class="accordion-item animated-card">
+<button aria-expanded="false" class="accordion-header">How to password protect a USB drive without BitLocker? <span class="icon-plus"></span></button>
+<div class="accordion-content">
+<p>If you are using Windows Home (which lacks BitLocker management) or need cross-platform compatibility, you must use third-party encryption software. Programs like USB Secure or VeraCrypt install a portable client directly on the drive, handling the encryption independent of the host operating system.</p>
+</div>
+</div>
+<div class="accordion-item animated-card">
+<button aria-expanded="false" class="accordion-header">How to password protect a USB drive on Windows 10 Home? <span class="icon-plus"></span></button>
+<div class="accordion-content">
+<p>Windows 10 and 11 Home editions cannot initiate BitLocker encryption. You must download a third-party tool. You can use free open-source software like VeraCrypt, or commercial portable security apps that create encrypted lock-boxes on the drive.</p>
+</div>
+</div>
+<div class="accordion-item animated-card">
+<button aria-expanded="false" class="accordion-header">How to password protect a USB drive on Mac? <span class="icon-plus"></span></button>
+<div class="accordion-content">
+<p>You can use the native "Disk Utility" app. Select your USB drive, click "Erase," and choose the "Mac OS Extended (Journaled, Encrypted)" or "APFS (Encrypted)" format. You will be prompted to create a password. Be warned: this erases all current data on the drive and makes it unreadable on Windows.</p>
+</div>
+</div>
+<div class="accordion-item animated-card">
+<button aria-expanded="false" class="accordion-header">What is the difference between hardware-encrypted and software-encrypted USB drives? <span class="icon-plus"></span></button>
+<div class="accordion-content">
+<p>Hardware-encrypted drives have a physical microchip (and often a keypad) built into the device that handles encryption natively, completely independent of the computer. Software-encrypted drives rely on the computer's processor and a software application to scramble and unscramble the files.</p>
+</div>
+</div>
+<div class="accordion-item animated-card">
+<button aria-expanded="false" class="accordion-header">Is a password-protected USB drive the same as an encrypted USB drive? <span class="icon-plus"></span></button>
+<div class="accordion-content">
+<p>No. Simple password protection (like hiding a folder or locking a ZIP file) often just tells the operating system not to display the files without a password. Encryption mathematically scrambles the raw data into unreadable ciphertext, making it impossible to read even if a hacker bypasses the operating system entirely.</p>
+</div>
+</div>
+<div class="accordion-item animated-card">
+<button aria-expanded="false" class="accordion-header">Can I password protect a USB drive on all computers? <span class="icon-plus"></span></button>
+<div class="accordion-content">
+<p>If you use a "plug-and-play" security tool that runs entirely from the flash drive without requiring administrative installation, you can generally unlock your files on any Windows computer. However, moving between entirely different OS families (Windows to Mac to Linux) requires software specifically designed with multi-platform companion apps.</p>
+</div>
+</div>
+<div class="accordion-item animated-card">
+<button aria-expanded="false" class="accordion-header">How to password protect a USB drive without erasing data? <span class="icon-plus"></span></button>
+<div class="accordion-content">
+<p>Third-party software tools (like USB Secure or Folder Lock) create encrypted vaults inside the existing free space on your drive. You can install the software, create the vault, and move your existing files inside without having to format the drive first.</p>
+</div>
+</div>
+<div class="accordion-item animated-card">
+<button aria-expanded="false" class="accordion-header">How do I safely use a USB drive on a shared computer? <span class="icon-plus"></span></button>
+<div class="accordion-content">
+<p>When using a shared or public computer, ensure your portable security software has a "virtual drive" feature that unmounts automatically when the drive is physically pulled. Never check "remember my password," and be wary of keyloggers on public machines.</p>
+</div>
+</div>
+<div class="accordion-item animated-card">
+<button aria-expanded="false" class="accordion-header">Can a virus spread through a password-protected USB drive? <span class="icon-plus"></span></button>
+<div class="accordion-content">
+<p>Yes. If the outside (unencrypted) portion of the drive is infected, it can spread malware when plugged in. Furthermore, if you unlock your encrypted vault on an infected computer, malware can copy itself into your secure vault before you lock it again.</p>
+</div>
+</div>
+<div class="accordion-item animated-card">
+<button aria-expanded="false" class="accordion-header">What is BadUSB and how do I protect against it? <span class="icon-plus"></span></button>
+<div class="accordion-content">
+<p>BadUSB is a vulnerability where a USB drive's internal firmware is overwritten to act as a malicious keyboard, executing dangerous commands the moment it is plugged in. File encryption does not prevent BadUSB. Protection requires strict organizational policies against unknown drives or using specialized hardware firewalls.</p>
+</div>
+</div>
+<div class="accordion-item animated-card">
+<button aria-expanded="false" class="accordion-header">Is it safe to use USB drives found in public? <span class="icon-plus"></span></button>
+<div class="accordion-content">
+<p>Never. Dropping infected "lost" USB drives in public places (like parking lots) is a common social engineering attack. Plugging one in can instantly compromise your system via BadUSB or auto-running malware.</p>
+</div>
+</div>
+<div class="accordion-item animated-card">
+<button aria-expanded="false" class="accordion-header">How to remove password protection from a USB drive? <span class="icon-plus"></span></button>
+<div class="accordion-content">
+<p>For BitLocker, right-click the drive, select "Manage BitLocker," and choose "Turn off BitLocker" (requires the current password). For third-party vaults, copy your files out of the secure locker onto your main hard drive, then use the software interface to delete the locker from the USB drive.</p>
+</div>
+</div>
+<div class="accordion-item animated-card">
+<button aria-expanded="false" class="accordion-header">How does BitLocker to Go compare to USB Secure software? <span class="icon-plus"></span></button>
+<div class="accordion-content">
+<p>BitLocker encrypts the whole drive structure and is free if you have Windows Pro, but it requires admin rights and can't be created on Windows Home. USB Secure runs purely from the drive itself, works on Windows Home, and doesn't require admin rights on the guest PC, making it much more portable for daily transit.</p>
+</div>
+</div>
+<div class="accordion-item animated-card">
+<button aria-expanded="false" class="accordion-header">What happens if I forget my USB drive password? <span class="icon-plus"></span></button>
+<div class="accordion-content">
+<p>With military-grade software (AES-256) or hardware encryption, a lost password means the data is permanently inaccessible. There are no bypass tools or "crack" utilities. If you don't have a recovery key (like the one BitLocker generates), you must format the drive to reuse it, permanently destroying the files.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<footer>
+<div class="footer-inner">
+<div>
+<div class="brand-wrapper" style="margin-bottom: 16px;">
+<svg aria-label="USBSecurityHub security mark" class="security-mark" role="img" viewbox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient gradientunits="userSpaceOnUse" id="brandShieldGradient" x1="10" x2="55" y1="8" y2="58">
+<stop stop-color="#667EEA"></stop>
+<stop offset="0.48" stop-color="#764BA2"></stop>
+<stop offset="1" stop-color="#00F2FE"></stop>
+</lineargradient>
+<lineargradient gradientunits="userSpaceOnUse" id="brandKeyGradient" x1="17" x2="48" y1="25" y2="42">
+<stop stop-color="#FF6B6B"></stop>
+<stop offset="1" stop-color="#FF8E53"></stop>
+</lineargradient>
+</defs>
+<path d="M32 5.5 52 13v15.8c0 13.2-8.1 24.9-20 29.7-11.9-4.8-20-16.5-20-29.7V13L32 5.5Z" fill="url(#brandShieldGradient)"></path>
+<path d="M32 11.7 46.7 17v12.2c0 9.1-5.8 17.7-14.7 21.7-8.9-4-14.7-12.6-14.7-21.7V17L32 11.7Z" fill="#0F0F1A" opacity=".85"></path>
+<path d="M28.3 36.9a8.4 8.4 0 1 1 4.4 4.4l-4.9 4.9h-4.4v-4.4l4.9-4.9Zm7.2-5.4a3.4 3.4 0 1 0 0-6.8 3.4 3.4 0 0 0 0 6.8Z" fill="url(#brandKeyGradient)"></path>
+</svg>
+<div class="site-brand" style="color: #fff; margin-bottom: 0;">USBSecurityHub</div>
+</div>
+<p>Your independent guide to protecting physical media and digital assets.</p>
+<p style="margin-top: 16px;">Folder Lock and USB Secure are developed by <a href="https://www.newsoftwares.net" rel="noopener noreferrer" target="_blank">NewSoftwares.net</a>.</p>
+</div>
+<div>
+<h4 style="color: #fff; margin-bottom: 16px; font-family: var(--font-heading);">Core Guides</h4>
+<ul style="list-style: none; padding: 0;">
+<li style="margin-bottom: 8px;"><a href="#methods">Encryption Methods</a></li>
+<li style="margin-bottom: 8px;"><a href="#comparison">Compare Security Tools</a></li>
+<li style="margin-bottom: 8px;"><a href="#tutorial">Step-by-Step Tutorial</a></li>
+</ul>
+</div>
+<div>
+<h4 style="color: #fff; margin-bottom: 16px; font-family: var(--font-heading);">Resources</h4>
+<ul style="list-style: none; padding: 0;">
+<li style="margin-bottom: 8px;"><a href="#troubleshooting">Troubleshooting Matrix</a></li>
+<li style="margin-bottom: 8px;"><a href="#faq">Data Recovery FAQ</a></li>
+<li style="margin-bottom: 8px;"><a href="#disposal">Safe Disposal Guide</a></li>
+</ul>
+</div>
+<div class="editorial-disclosure">
+            This site operates as an independent editorial resource. Some links may earn a referral commission at no cost to you. Product recommendations reflect editorial judgment and independent assessment. © 2026 USBSecurityHub
+        </div>
+</div>
+</footer>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile Menu Toggle
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            if(menuToggle) {
+                menuToggle.addEventListener('click', () => {
+                    navLinks.classList.toggle('show');
+                });
+            }
+
+            // Accordion Logic
+            const accordions = document.querySelectorAll('.accordion-header');
+            accordions.forEach(acc => {
+                acc.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const content = this.nextElementSibling;
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                        this.setAttribute('aria-expanded', 'false');
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        this.setAttribute('aria-expanded', 'true');
+                    }
+                });
+            });
+
+            // Signature Detail: Toggle Switcher (Free vs Pro)
+            const toggleBtns = document.querySelectorAll('.toggle-btn');
+            const toggleSlider = document.getElementById('toggle-slider');
+            const panes = document.querySelectorAll('.toggle-content-pane');
+
+            toggleBtns.forEach((btn, index) => {
+                btn.addEventListener('click', () => {
+                    toggleBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    toggleSlider.style.transform = `translateX(${index * 100}%)`;
+                    const targetId = btn.getAttribute('data-target');
+                    panes.forEach(pane => {
+                        pane.classList.remove('active');
+                        if(pane.id === targetId) {
+                            pane.classList.add('active');
+                        }
+                    });
+                });
+            });
+
+            // Intent Selector Widget
+            const intentTabs = document.querySelectorAll('.intent-tab');
+            const intentContents = document.querySelectorAll('.intent-content');
+            
+            intentTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    intentTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    const targetId = tab.getAttribute('data-tab');
+                    intentContents.forEach(c => {
+                        c.classList.remove('active');
+                        if(c.id === targetId) {
+                            c.classList.add('active');
+                        }
+                    });
+                });
+            });
+        });
+
+        // Quiz Logic
+        let riskScores = { high: 0, med: 0, low: 0 };
+        function nextQ(nextQNum, scoreWeight) {
+            riskScores[scoreWeight]++;
+            document.querySelectorAll('.quiz-question-block').forEach(b => b.style.display = 'none');
+            document.getElementById('quiz-q' + nextQNum).style.display = 'block';
+        }
+        function showResult(scoreWeight) {
+            riskScores[scoreWeight]++;
+            document.querySelectorAll('.quiz-question-block').forEach(b => b.style.display = 'none');
+            
+            const resultBox = document.getElementById('quiz-result');
+            const levelText = document.getElementById('risk-level');
+            const descText = document.getElementById('risk-desc');
+            
+            resultBox.style.display = 'block';
+            
+            if (riskScores.high >= 2) {
+                levelText.innerText = 'High Risk';
+                levelText.style.color = '#dc2626';
+                descText.innerText = 'You frequently transport sensitive data without adequate cryptographic defense. You need to implement AES-256 encryption immediately before a loss occurs.';
+            } else if (riskScores.med >= 2 || (riskScores.high === 1 && riskScores.med === 1)) {
+                levelText.innerText = 'Moderate Risk';
+                levelText.style.color = '#d97706';
+                descText.innerText = 'While you may not carry critical client data, basic ZIP passwords or hidden folders are easily bypassed. Consider upgrading to a portable software lock.';
+            } else {
+                levelText.innerText = 'Low Risk';
+                levelText.style.color = '#16a34a';
+                descText.innerText = 'You are already utilizing strong encryption or carry non-sensitive files. Continue adhering to safe USB handling practices.';
+            }
+        }
+        function resetQuiz() {
+            riskScores = { high: 0, med: 0, low: 0 };
+            document.getElementById('quiz-result').style.display = 'none';
+            document.getElementById('quiz-q1').style.display = 'block';
+        }
+
+        // Compatibility Checker Logic
+        function checkCompat() {
+            const select = document.getElementById('os-select');
+            const result = document.getElementById('compat-result');
+            result.style.display = 'block';
+            
+            switch(select.value) {
+                case 'win-only':
+                    result.innerHTML = '<strong>Recommendation: BitLocker or USB Secure.</strong> If you have Windows Pro, BitLocker is a free native choice. If you have Windows Home, you must use portable software like USB Secure.';
+                    break;
+                case 'mac-only':
+                    result.innerHTML = '<strong>Recommendation: Mac Disk Utility.</strong> Native APFS encryption is fast and free. Just remember the drive will be unreadable on Windows PCs.';
+                    break;
+                case 'cross':
+                    result.innerHTML = '<strong>Recommendation: Cross-Platform Software.</strong> Format the drive to ExFAT and use a multi-platform suite like Folder Lock so you can access the vault companion apps on both macOS and Windows.';
+                    break;
+                case 'public':
+                    result.innerHTML = '<strong>Recommendation: Portable Standalone Client.</strong> Use software that mounts a virtual drive without needing administrative rights (like USB Secure). Note that highly strict libraries may block all .exe files entirely.';
+                    break;
+                default:
+                    result.style.display = 'none';
+            }
+        }
+    </script><script>
+document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.animated-card');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.18 });
+
+    cards.forEach(card => {
+        observer.observe(card);
+        card.addEventListener('click', () => {
+            if (window.matchMedia('(hover: none)').matches) {
+                card.classList.toggle('tap-gradient');
+            }
+        });
+    });
+
+    const methodCards = document.querySelectorAll('.method-card');
+    const barObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                barObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.28 });
+
+    methodCards.forEach(card => barObserver.observe(card));
+});
+</script>
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "How to Password Protect a USB Drive on Windows and Mac",
+      "description": "A complete editorial guide on how to password protect a USB drive. Compare native OS tools like BitLocker with cross-platform software methods."
+    }
+    </script>
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How to password protect a USB drive without BitLocker?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "If you are using Windows Home (which lacks BitLocker management) or need cross-platform compatibility, you must use third-party encryption software. Programs like USB Secure or VeraCrypt install a portable client directly on the drive, handling the encryption independent of the host operating system."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How to password protect a USB drive on Windows 10 Home?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Windows 10 and 11 Home editions cannot initiate BitLocker encryption. You must download a third-party tool. You can use free open-source software like VeraCrypt, or commercial portable security apps that create encrypted lock-boxes on the drive."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How to password protect a USB drive on Mac?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can use the native 'Disk Utility' app. Select your USB drive, click 'Erase,' and choose the 'Mac OS Extended (Journaled, Encrypted)' or 'APFS (Encrypted)' format. You will be prompted to create a password. Be warned: this erases all current data on the drive and makes it unreadable on Windows."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between hardware-encrypted and software-encrypted USB drives?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Hardware-encrypted drives have a physical microchip (and often a keypad) built into the device that handles encryption natively, completely independent of the computer. Software-encrypted drives rely on the computer's processor and a software application to scramble and unscramble the files."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I password protect a USB drive on all computers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "If you use a 'plug-and-play' security tool that runs entirely from the flash drive without requiring administrative installation, you can generally unlock your files on any Windows computer. However, moving between entirely different OS families (Windows to Mac to Linux) requires software specifically designed with multi-platform companion apps."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if I forget my USB drive password?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "With military-grade software (AES-256) or hardware encryption, a lost password means the data is permanently inaccessible. There are no bypass tools or 'crack' utilities. If you don't have a recovery key (like the one BitLocker generates), you must format the drive to reuse it, permanently destroying the files."
+          }
+        }
+      ]
+    }
+    </script>
+</body>
+</html>
